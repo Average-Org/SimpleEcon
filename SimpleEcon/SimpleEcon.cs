@@ -64,7 +64,6 @@ namespace SimpleEcon
             ServerApi.Hooks.ServerLeave.Register(this, PlayerLeave);
             ServerApi.Hooks.GameInitialize.Register(this, Loaded);
             TShockAPI.Hooks.GeneralHooks.ReloadEvent += Reloaded;
-            ServerApi.Hooks.GameUpdate.Register(this, OnUpdate);
         }
 
         private void Loaded(EventArgs args)
@@ -75,6 +74,21 @@ namespace SimpleEcon
             Commands.ChatCommands.Add(new Command("se.user", PayUser, "pay", "transfer"));
             Commands.ChatCommands.Add(new Command("se.admin", GiveBal, "givebal", "gbal"));
 
+            rewardsManager();
+        }
+
+        public async void rewardsManager()
+        {
+            if (config.giveRewardsForPlaytime == true)
+            {
+                await Task.Delay(config.rewardtimer * 60 * 1000);
+                foreach (EconPlayer p in econPlayers)
+                {
+                    p.balance++;
+                }
+                dbManager.SaveAllPlayers();
+                rewardsManager();
+            }
         }
 
         private void Balance(CommandArgs args)
@@ -163,24 +177,11 @@ namespace SimpleEcon
             return;
         }
 
-        private async void OnUpdate(EventArgs args)
-        {
-            if(config.giveRewardsForPlaytime == true)
-            {
-                await Task.Delay(config.rewardtimer*60*1000);
-                foreach(EconPlayer p in econPlayers)
-                {
-                    p.balance++;
-                }
-                dbManager.SaveAllPlayers();
-            }
-        }
-
         private void Reloaded(ReloadEventArgs e)
         {
             dbManager.SaveAllPlayers();
             config = Config.Read();
-
+            rewardsManager();
         }
 
 
