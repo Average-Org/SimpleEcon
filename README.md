@@ -39,7 +39,7 @@ Simply add this plugin as a dependency for yours and you'll be able to use the f
 ```c#
 
 //Retrieve a user balance:
-SimpleEcon.PlayerManager.GetPlayer(playerName).balance
+SimpleEcon.PlayerManager.GetPlayer(playerName).balance;
 
 //Example - will check if user has certain amount
 var p = SimpleEcon.PlayerManager.GetPlayer(playerName).balance;
@@ -61,7 +61,7 @@ SimpleEcon.PlayerManager.UpdatePlayerBalance(playerName, amount);
 //Example - will update a user balance to 5000
 var pm = SimpleEcon.PlayerManager;
 
-pm.UpdatePlayerBalance("John Doe", 5000)
+pm.UpdatePlayerBalance("John Doe", 5000);
 //negative values ARE possible!
 
 ```
