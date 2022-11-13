@@ -76,7 +76,9 @@ SimpleEcon.SimpleEcon.config.currencyNameSingular;
 SimpleEcon.SimpleEcon.config.currencyNamePlural;
 
 //Example - send message to user on money update 
-player.SendSuccessMessage($"The moderator {args.Player.Name} has manipulated your currency and given you {amount} {(amount == 1 ? config.currencyNameSingular : config.currencyNamePlural)}! Your new balance is: {PlayerManager.GetPlayer(player.Name).balance} {(PlayerManager.GetPlayer(player.Name).balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}");
+float amount = 100;
+
+player.SendSuccessMessage($"The moderator {moderator} has manipulated your currency and given you {amount} {(amount == 1 ? config.currencyNameSingular : config.currencyNamePlural)}! Your new balance is: {PlayerManager.GetPlayer(player.Name).balance} {(PlayerManager.GetPlayer(player.Name).balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}");
 
 ```
 
