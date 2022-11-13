@@ -1,7 +1,7 @@
 # Average's Simple Economy
 Support me & this plugin's (along with several others) development on Ko.Fi: [Here!](https://ko-fi.com/averageterraria)
 
-A super simple and lightweight tShock V5 plugin. This serves as a framework(ish) where other plugin developers can utilize this plugin to integrate a form of economy. There are also a few commands that this plugin implements. Everything you will need to know will be listed here! If I have missed anything, contact me on Discord: Average#1305| /bal    |Shows the player's balance |/gen (option) [number required] [specific type of certain option] | se.user |
+A super simple and lightweight tShock V5 plugin. This serves as a framework(ish) where other plugin developers can utilize this plugin to integrate a form of economy. There are also a few commands that this plugin implements. Everything you will need to know will be listed here! If I have missed anything, contact me on Discord: Average#1305
 
 ### Notes
 - SQLite is currently the only usable DB type. If your TShock server utilizies MySQL, you are currently out of luck (this will be changed soon, however)
