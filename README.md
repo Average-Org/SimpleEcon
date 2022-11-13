@@ -1,7 +1,7 @@
 # Average's Simple Economy
 Support me & this plugin's (along with several others) development on Ko.Fi: [Here!](https://ko-fi.com/averageterraria)
 
-A super simple and lightweight tShock V5 plugin. This serves as a framework(ish) where other plugin developers can utilize this plugin to integrate a form of economy. There are also a few commands that this plugin implements. Everything you will need to know will be listed here! If I have missed anything, contact me on Discord: Average#1305| /bal    |Shows the player's balance |/gen (option) [number required] [specific type of certain option] | se.user |
+A super simple and lightweight tShock V5 plugin. This serves as a framework(ish) where other plugin developers can utilize this plugin to integrate a form of economy. There are also a few commands that this plugin implements. Everything you will need to know will be listed here! If I have missed anything, contact me on Discord: Average#1305
 
 ### Notes
 - SQLite is currently the only usable DB type. If your TShock server utilizies MySQL, you are currently out of luck (this will be changed soon, however)
@@ -39,7 +39,7 @@ Simply add this plugin as a dependency for yours and you'll be able to use the f
 ```c#
 
 //Retrieve a user balance:
-SimpleEcon.PlayerManager.GetPlayer(playerName).balance
+SimpleEcon.PlayerManager.GetPlayer(playerName).balance;
 
 //Example - will check if user has certain amount
 var p = SimpleEcon.PlayerManager.GetPlayer(playerName).balance;
@@ -61,7 +61,7 @@ SimpleEcon.PlayerManager.UpdatePlayerBalance(playerName, amount);
 //Example - will update a user balance to 5000
 var pm = SimpleEcon.PlayerManager;
 
-pm.UpdatePlayerBalance("John Doe", 5000)
+pm.UpdatePlayerBalance("John Doe", 5000);
 //negative values ARE possible!
 
 ```
@@ -76,7 +76,9 @@ SimpleEcon.SimpleEcon.config.currencyNameSingular;
 SimpleEcon.SimpleEcon.config.currencyNamePlural;
 
 //Example - send message to user on money update 
-player.SendSuccessMessage($"The moderator {args.Player.Name} has manipulated your currency and given you {amount} {(amount == 1 ? config.currencyNameSingular : config.currencyNamePlural)}! Your new balance is: {PlayerManager.GetPlayer(player.Name).balance} {(PlayerManager.GetPlayer(player.Name).balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}");
+float amount = 100;
+
+player.SendSuccessMessage($"The moderator {moderator} has manipulated your currency and given you {amount} {(amount == 1 ? config.currencyNameSingular : config.currencyNamePlural)}! Your new balance is: {PlayerManager.GetPlayer(player.Name).balance} {(PlayerManager.GetPlayer(player.Name).balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}");
 
 ```
 
