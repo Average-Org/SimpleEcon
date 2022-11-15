@@ -94,8 +94,9 @@ namespace SimpleEcon
         private void Balance(CommandArgs args)
         {
             EconPlayer player = PlayerManager.GetPlayer(args.Player.Name);
+            float balance = dbManager.getUserBalance(player);
 
-            args.Player.SendMessage($"You currently have {player.balance} {(player.balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}", Color.LightGoldenrodYellow);
+            args.Player.SendMessage($"You currently have {balance} {(balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}", Color.LightGoldenrodYellow);
             return;
         }
 
@@ -188,21 +189,23 @@ namespace SimpleEcon
         private void PlayerJoin(GreetPlayerEventArgs args)
         {
             TSPlayer player = TShock.Players[args.Who];
+
             EconPlayer p = new EconPlayer(player.Name, player);
             econPlayers.Add(p);
-            InitPlayerEcon(econPlayers.Find(e => e.name == p.name));
-         
+            InitPlayerEcon(p);
+
+
         }
 
         public void InitPlayerEcon(EconPlayer p)
         {
-            if (dbManager.RetrieveBalance(p) == false)
+            if (dbManager.userExists(p) == false)
             {
                 dbManager.InsertPlayer(p);
                 return;
             }
-                dbManager.RetrieveBalance(p);
-            
+
+            p.balance = dbManager.getUserBalance(p);            
         }
 
         public void UpdatePlayer(EconPlayer p)
@@ -215,7 +218,7 @@ namespace SimpleEcon
         {
             TSPlayer player = TShock.Players[args.Who];
 
-            dbManager.SaveAllPlayers();
+            dbManager.SavePlayer(PlayerManager.GetPlayer(player.Name));
             econPlayers.Remove(new EconPlayer(player.Name, player));
         }
 

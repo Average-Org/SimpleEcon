@@ -36,8 +36,10 @@ namespace SimpleEcon
             return _db.Query("DELETE FROM SimpleEcon WHERE Name = @0", playerName) != 0;
         }
 
-        public bool SavePlayer(EconPlayer player)
+        public bool SavePlayer(EconPlayer p)
         {
+            EconPlayer player = PlayerManager.GetPlayer(p.name);
+
             return _db.Query("UPDATE SimpleEcon SET Balance = @0 WHERE Name = @1",
                 player.balance, player.name) != 0;
         }
@@ -45,12 +47,12 @@ namespace SimpleEcon
         public void SaveAllPlayers()
         {
             foreach (var player in SimpleEcon.econPlayers){
-                SavePlayer(player);
+                SavePlayer(PlayerManager.GetPlayer(player.name));
 
             }
         }
 
-        public bool RetrieveBalance(EconPlayer player)
+        public bool userExists(EconPlayer player)
         {
             using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", player.name))
             {
@@ -59,9 +61,9 @@ namespace SimpleEcon
                     var name = reader.Get<string>("Name");
                     var bal = reader.Get<float>("Balance");
 
-                    PlayerManager.GetPlayer(name).balance = bal;
                     return true;
                 }
+                Console.WriteLine("User did not exist! Creating economy for " + player.name);
                 return false;
             }
         }
@@ -80,6 +82,25 @@ namespace SimpleEcon
                     p.Add(new Tuple<string, float>(name, bal));
                 }
                 return p;
+            }
+        }
+
+        public float getUserBalance(EconPlayer player)
+        {
+            SaveAllPlayers();
+            List<Tuple<string, float>> p = new List<Tuple<string, float>>();
+
+            using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", player.name))
+            {
+                while (reader.Read() && p.Count != 10)
+                {
+                    var name = reader.Get<string>("Name");
+                    var bal = reader.Get<float>("Balance");
+
+                    return bal;
+
+                }
+                return 0;
             }
         }
     }
