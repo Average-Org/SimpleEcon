@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using TShockAPI.DB;
 using SimpleEcon;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace SimpleEcon
 {
@@ -51,6 +52,9 @@ namespace SimpleEcon
 
             }
         }
+
+
+
 
         public bool userExists(EconPlayer player)
         {

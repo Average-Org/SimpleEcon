@@ -7,6 +7,7 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 using TerrariaApi.Server;
 using TShockAPI;
 using TShockAPI.Hooks;
@@ -63,6 +64,7 @@ namespace SimpleEcon
             ServerApi.Hooks.NetGreetPlayer.Register(this, PlayerJoin);
             ServerApi.Hooks.ServerLeave.Register(this, PlayerLeave);
             ServerApi.Hooks.GameInitialize.Register(this, Loaded);
+            ServerApi.Hooks.NetSendData.Register(this, NetHooks_SendData);
             TShockAPI.Hooks.GeneralHooks.ReloadEvent += Reloaded;
         }
 
@@ -90,6 +92,96 @@ namespace SimpleEcon
                 rewardsManager();
             }
         }
+
+        void NetHooks_SendData(SendDataEventArgs e)
+        {
+            if (e.MsgId == PacketTypes.NpcStrike)
+            {
+                NPC npc = Main.npc[e.number];
+                if (npc.life <= 0)
+                {
+                    var player = TSPlayer.FindByNameOrID(e.ignoreClient.ToString());
+                    Color color;
+
+                    int totalGiven = 1;
+                    color = Color.Gold;
+
+                    if (npc.netID == NPCID.EyeofCthulhu)
+                    {
+                        totalGiven = 100;
+                        color = Color.IndianRed;
+                    }
+
+                    if (npc.netID == NPCID.EaterofWorldsBody)
+                    {
+                        totalGiven = 150;
+                        color = Color.MediumPurple;
+                    }
+
+
+                    if (npc.netID == NPCID.SkeletronHead)
+                    {
+                        totalGiven = 150;
+                        color = Color.Gray;
+                    }
+
+
+                    if (npc.netID == NPCID.Skeleton)
+                    {
+                        totalGiven = 3;
+                        color = Color.Gray;
+                    }
+
+                    if (npc.netID == NPCID.Pinky)
+                    {
+                        totalGiven = 1000;
+                        color = Color.Pink;
+                    }
+
+                    if (npc.netID == NPCID.DemonEye)
+                    {
+                        totalGiven = 2;
+                        color = Color.DarkRed;
+                    }
+
+                    if (npc.netID == NPCID.Zombie)
+                    {
+                        totalGiven = 2;
+                        color = Color.DarkGreen;
+                    }
+
+                    if (npc.netID == NPCID.BlueSlime)
+                    {
+                        totalGiven = 1;
+                        color = Color.Blue;
+                    }
+
+                    if (npc.netID == NPCID.GreenSlime)
+                    {
+                        totalGiven = 1;
+                        color = Color.Green;
+                    }
+
+                    if (npc.netID == NPCID.RedSlime)
+                    {
+                        totalGiven = 1;
+                        color = Color.Red;
+                    }
+
+                    PlayerManager.GetPlayer(player[0].Name).balance += totalGiven;
+                    if (totalGiven == 1)
+                    {
+                        player[0].SendMessage("+ " + totalGiven + " " + config.currencyNameSingular + " from killing " + npc.FullName, color);
+                    }
+                    else
+                    {
+                        player[0].SendMessage("+ " + totalGiven + " " + config.currencyNamePlural + " from killing " + npc.FullName, color);
+                    }
+
+                }
+            }
+        }
+
 
         private void Balance(CommandArgs args)
         {
