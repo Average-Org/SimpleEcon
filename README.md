@@ -14,6 +14,11 @@ A super simple and lightweight tShock V5 plugin. This serves as a framework(ish)
 {
   "currencyNameSingular": "dollar",
   "currencyNamePlural": "dollars",
+  "excludedMobs": [
+    211,
+    210
+  ],
+  "enableMobDrops": true,
   "giveRewardsForPlaytime": false,
   "rewardtimer": 5
 }
@@ -22,6 +27,10 @@ A super simple and lightweight tShock V5 plugin. This serves as a framework(ish)
 All of this is extremely simple, and intuitive. `currencyNameSingular` and `currencyNamePlural` dictate what the currency will be called within this plugin, and others!
 
 `giveRewardsForPlaytime` will give the player a singular currency each time the `rewardTimer` goes off. To explain it better, if enabled, every <x> minutes (defined by `rewardTimer`), the player is given one currency!
+ 
+ `excludedMobs` is a list of NPC ids that are excluded from dropping economy! Find the ID on the [Terraria Wiki!](https://terraria.fandom.com/wiki)
+ 
+ `enableMobDrops` will drop economy when a mob is killed!
  
 ## Commands List 
 
