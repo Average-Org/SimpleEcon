@@ -22,6 +22,13 @@ namespace SimpleEcon
 
         }
 
+        public EconPlayer(string playerName, TSPlayer player, float bal)
+        {
+            this.name = playerName;
+            this.player = player;
+            this.balance = bal;
+        }
+
     }
 
     public static class PlayerManager

@@ -56,18 +56,18 @@ namespace SimpleEcon
 
 
 
-        public bool userExists(EconPlayer player)
+        public bool userExists(string name)
         {
-            using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", player.name))
+            using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", name))
             {
                 while (reader.Read())
                 {
-                    var name = reader.Get<string>("Name");
+                    var user = reader.Get<string>("Name");
                     var bal = reader.Get<float>("Balance");
 
                     return true;
                 }
-                Console.WriteLine("User did not exist! Creating economy for " + player.name);
+                Console.WriteLine("User did not exist! Creating economy for " + name);
                 return false;
             }
         }
@@ -89,14 +89,14 @@ namespace SimpleEcon
             }
         }
 
-        public float getUserBalance(EconPlayer player)
+        public float getUserBalance(string player)
         {
             SaveAllPlayers();
             List<Tuple<string, float>> p = new List<Tuple<string, float>>();
 
-            using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", player.name))
+            using (var reader = _db.QueryReader("SELECT * FROM SimpleEcon WHERE Name = @0", player))
             {
-                while (reader.Read() && p.Count != 10)
+                while (reader.Read())
                 {
                     var name = reader.Get<string>("Name");
                     var bal = reader.Get<float>("Balance");

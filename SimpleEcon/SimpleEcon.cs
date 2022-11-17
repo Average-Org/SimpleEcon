@@ -205,7 +205,7 @@ namespace SimpleEcon
         private void Balance(CommandArgs args)
         {
             EconPlayer player = PlayerManager.GetPlayer(args.Player.Name);
-            float balance = dbManager.getUserBalance(player);
+            float balance = dbManager.getUserBalance(player.name);
 
             args.Player.SendMessage($"You currently have {balance} {(balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}", Color.LightGoldenrodYellow);
             return;
@@ -303,25 +303,23 @@ namespace SimpleEcon
             {
                 return;
             }
-
             TSPlayer player = TShock.Players[args.Who];
 
-            EconPlayer p = new EconPlayer(player.Name, player);
-            econPlayers.Add(p);
-            InitPlayerEcon(p);
-
-        }
-
-        public void InitPlayerEcon(EconPlayer p)
-        {
-            if (dbManager.userExists(p) == false)
+            if (dbManager.userExists(TShock.Players[args.Who].Name) == false)
             {
+                EconPlayer p = new EconPlayer(player.Name, player);
+                econPlayers.Add(p);
                 dbManager.InsertPlayer(p);
                 return;
             }
 
-            p.balance = dbManager.getUserBalance(p);            
+            var bal = dbManager.getUserBalance(player.Name);
+            EconPlayer o = new EconPlayer(player.Name, player, bal);
+            econPlayers.Add(o);
+
+            return;
         }
+
 
         public void UpdatePlayer(EconPlayer p)
         {
@@ -351,7 +349,12 @@ namespace SimpleEcon
         {
             if (disposing)
             {
-                
+                dbManager.SaveAllPlayers();
+                ServerApi.Hooks.NetGreetPlayer.Deregister(this, PlayerJoin);
+                ServerApi.Hooks.ServerLeave.Deregister(this, PlayerLeave);
+                ServerApi.Hooks.GameInitialize.Deregister(this, Loaded);
+                ServerApi.Hooks.NpcStrike.Deregister(this, OnNpcStrike);
+                TShockAPI.Hooks.GeneralHooks.ReloadEvent -= Reloaded;
             }
             base.Dispose(disposing);
         }
