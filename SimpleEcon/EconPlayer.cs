@@ -28,7 +28,18 @@ namespace SimpleEcon
     {
         public static EconPlayer GetPlayer(int playerId)
         {
+            if(playerId == null)
+            {
+                return null;
+            }
+
+            if (TShock.Players[playerId] == null)
+            {
+                return null;
+            }
+
             var name = TShock.Players[playerId].Name;
+
 
             return SimpleEcon.econPlayers.Find(p => p.name == name);
         }

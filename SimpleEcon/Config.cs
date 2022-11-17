@@ -7,12 +7,14 @@ using Newtonsoft.Json;
 
 namespace SimpleEcon
 {
-    public class Config
-    {
+	public class Config
+	{
 		public string currencyNameSingular { get; set; } = "dollar";
 		public string currencyNamePlural { get; set; } = "dollars";
 
+		public List<int> excludedMobs { get; set; } = new List<int>() { 211, 210 };
 
+		public bool enableMobDrops { get; set; } = false;
 		public bool giveRewardsForPlaytime { get; set; } = false;
 		public int rewardtimer { get; set; } = 5;
 

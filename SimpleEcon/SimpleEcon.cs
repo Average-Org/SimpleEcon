@@ -95,12 +95,40 @@ namespace SimpleEcon
 
         void NetHooks_SendData(SendDataEventArgs e)
         {
+            if(config.enableMobDrops == false)
+            {
+                return;
+            }
+            TSPlayer player = null;
+
+            if (e.Handled == true
+                || (player = TSPlayer.FindByNameOrID(e.ignoreClient.ToString())[0]) == null)
+            {
+                return;
+            }
+
             if (e.MsgId == PacketTypes.NpcStrike)
             {
+                if (Main.npc[e.number] == null)
+                {
+                    return;
+                }
                 NPC npc = Main.npc[e.number];
+
+                if (config.excludedMobs.Count > 0)
+                {
+                    foreach(int mob in config.excludedMobs)
+                    {
+                        if (npc.netID == mob)
+                        {
+                            return;
+                        }
+                    }
+                }
+
                 if (npc.life <= 0)
                 {
-                    var player = TSPlayer.FindByNameOrID(e.ignoreClient.ToString());
+                    player = TSPlayer.FindByNameOrID(e.ignoreClient.ToString())[0];
                     Color color;
 
                     int totalGiven = 1;
@@ -168,14 +196,14 @@ namespace SimpleEcon
                         color = Color.Red;
                     }
 
-                    PlayerManager.GetPlayer(player[0].Name).balance += totalGiven;
+                    PlayerManager.GetPlayer(player.Name).balance += totalGiven;
                     if (totalGiven == 1)
                     {
-                        player[0].SendMessage("+ " + totalGiven + " " + config.currencyNameSingular + " from killing " + npc.FullName, color);
+                        player.SendMessage("+ " + totalGiven + " " + config.currencyNameSingular + " from killing " + npc.FullName, color);
                     }
                     else
                     {
-                        player[0].SendMessage("+ " + totalGiven + " " + config.currencyNamePlural + " from killing " + npc.FullName, color);
+                        player.SendMessage("+ " + totalGiven + " " + config.currencyNamePlural + " from killing " + npc.FullName, color);
                     }
 
                 }
@@ -280,12 +308,16 @@ namespace SimpleEcon
 
         private void PlayerJoin(GreetPlayerEventArgs args)
         {
+            if(TShock.Players[args.Who] == null)
+            {
+                return;
+            }
+
             TSPlayer player = TShock.Players[args.Who];
 
             EconPlayer p = new EconPlayer(player.Name, player);
             econPlayers.Add(p);
             InitPlayerEcon(p);
-
 
         }
 
@@ -308,7 +340,17 @@ namespace SimpleEcon
 
         private void PlayerLeave(LeaveEventArgs args)
         {
+            if(TShock.Players[args.Who] == null)
+            {
+                return;
+            }
+
             TSPlayer player = TShock.Players[args.Who];
+
+            if (PlayerManager.GetPlayer(player.Name) == null) {
+                return;
+            }
+
 
             dbManager.SavePlayer(PlayerManager.GetPlayer(player.Name));
             econPlayers.Remove(new EconPlayer(player.Name, player));
