@@ -64,7 +64,7 @@ namespace SimpleEcon
             ServerApi.Hooks.NetGreetPlayer.Register(this, PlayerJoin);
             ServerApi.Hooks.ServerLeave.Register(this, PlayerLeave);
             ServerApi.Hooks.GameInitialize.Register(this, Loaded);
-            ServerApi.Hooks.NpcStrike.Register(this, OnNpcStrike);
+            ServerApi.Hooks.NetSendData.Register(this, OnNpcStrike);
             TShockAPI.Hooks.GeneralHooks.ReloadEvent += Reloaded;
         }
 
@@ -92,30 +92,34 @@ namespace SimpleEcon
                 rewardsManager();
             }
         }
-        public void OnNpcStrike(NpcStrikeEventArgs args)
+        public void OnNpcStrike(SendDataEventArgs args)
         {
-            if (config.enableMobDrops == false)
+                if (args.MsgId != PacketTypes.NpcStrike) { 
+                return;
+                }
+
+                if (config.enableMobDrops == false)
+            {
+                return;
+            }
+            var npc = Main.npc[args.number];
+            var player = TSPlayer.FindByNameOrID(args.ignoreClient.ToString())[0];
+            Color color;
+
+            if (!(npc.life <= 0))
             {
                 return;
             }
 
-            var realDamage = (int)Main.CalculateDamageNPCsTake(args.Damage, args.Npc.defense);
-            var npc = args.Npc.realLife > 0 ? Main.npc[args.Npc.realLife] : args.Npc;
-            var totalDamage = (int)(Math.Min(realDamage, npc.life));
-            var player = TSPlayer.FindByNameOrID(args.Player.name)[0];
-            Color color;
+                color = Color.Gold;
 
-            int totalGiven = 1;
-            color = Color.Gold;
-
-            if (args.Npc.type != NPCID.TargetDummy && totalDamage > 0 && !args.Npc.SpawnedFromStatue)
+            if (npc.type != NPCID.TargetDummy && !npc.SpawnedFromStatue)
             {
-                if(npc.realLife > 0)
-                {
-                    return;
-                }
+        
+                int totalGiven = 1;
 
-                if(config.excludedMobs.Count > 0)
+
+                if (config.excludedMobs.Count > 0)
                 {
                     foreach(var mob in config.excludedMobs)
                     {
@@ -196,6 +200,7 @@ namespace SimpleEcon
                 {
                     player.SendMessage("+ " + totalGiven + " " + config.currencyNamePlural + " from killing " + npc.FullName, color);
                 }
+
                 PlayerManager.GetPlayer(player.Name).balance += totalGiven;
             }
         }
@@ -353,7 +358,7 @@ namespace SimpleEcon
                 ServerApi.Hooks.NetGreetPlayer.Deregister(this, PlayerJoin);
                 ServerApi.Hooks.ServerLeave.Deregister(this, PlayerLeave);
                 ServerApi.Hooks.GameInitialize.Deregister(this, Loaded);
-                ServerApi.Hooks.NpcStrike.Deregister(this, OnNpcStrike);
+                ServerApi.Hooks.NetSendData.Deregister(this, OnNpcStrike);
                 TShockAPI.Hooks.GeneralHooks.ReloadEvent -= Reloaded;
             }
             base.Dispose(disposing);
