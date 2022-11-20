@@ -103,6 +103,12 @@ namespace SimpleEcon
                 return;
             }
             var npc = Main.npc[args.number];
+
+            if (args.ignoreClient == -1)
+            {
+                return;
+            }
+
             var player = TSPlayer.FindByNameOrID(args.ignoreClient.ToString())[0];
             Color color;
 
