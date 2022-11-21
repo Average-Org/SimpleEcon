@@ -19,6 +19,7 @@ A super simple and lightweight tShock V5 plugin. This serves as a framework(ish)
     210
   ],
   "enableMobDrops": true,
+  "announceMobDrops": true,
   "giveRewardsForPlaytime": false,
   "rewardtimer": 5
 }
@@ -31,6 +32,8 @@ All of this is extremely simple, and intuitive. `currencyNameSingular` and `curr
  `excludedMobs` is a list of NPC ids that are excluded from dropping economy! Find the ID on the [Terraria Wiki!](https://terraria.fandom.com/wiki)
  
  `enableMobDrops` will drop economy when a mob is killed!
+ 
+ `announceMobDrops` toggles whether or not it should send "+1 economy" to the player when they kill a mob or not!
  
 ## Commands List 
 
