@@ -15,6 +15,7 @@ namespace SimpleEcon
 		public List<int> excludedMobs { get; set; } = new List<int>() { 211, 210 };
 
 		public bool enableMobDrops { get; set; } = false;
+		public bool announceMobDrops { get; set; } = true;
 		public bool giveRewardsForPlaytime { get; set; } = false;
 		public int rewardtimer { get; set; } = 5;
 

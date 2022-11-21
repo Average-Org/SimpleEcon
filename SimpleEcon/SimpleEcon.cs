@@ -198,6 +198,14 @@ namespace SimpleEcon
                     color = Color.Red;
                 }
 
+                PlayerManager.GetPlayer(player.Name).balance += totalGiven;
+
+                if(config.announceMobDrops == false)
+                {
+                    return;
+                }
+
+
                 if (totalGiven == 1)
                 {
                     player.SendMessage("+ " + totalGiven + " " + config.currencyNameSingular + " from killing " + npc.FullName, color);
@@ -206,8 +214,6 @@ namespace SimpleEcon
                 {
                     player.SendMessage("+ " + totalGiven + " " + config.currencyNamePlural + " from killing " + npc.FullName, color);
                 }
-
-                PlayerManager.GetPlayer(player.Name).balance += totalGiven;
             }
         }
       
