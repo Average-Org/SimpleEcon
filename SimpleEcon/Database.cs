@@ -29,12 +29,12 @@ namespace SimpleEcon
 
         public bool InsertPlayer(EconPlayer player)
         {
-            return _db.Query("INSERT INTO SimpleEcon (Name, Balance)" + "VALUES (@0, @1)", player.name, 0) != 0;
+            return _db.Query("INSERT INTO SimpleEcon (Name, Balance)" + "VALUES (@0, @1)", player.accountName, 0) != 0;
         }
 
-        public bool DeletePlayer(string playerName)
+        public bool DeletePlayer(string accountName)
         {
-            return _db.Query("DELETE FROM SimpleEcon WHERE Name = @0", playerName) != 0;
+            return _db.Query("DELETE FROM SimpleEcon WHERE Name = @0", accountName) != 0;
         }
 
         public bool SavePlayer(EconPlayer p)
@@ -42,7 +42,7 @@ namespace SimpleEcon
             EconPlayer player = PlayerManager.GetPlayer(p.name);
 
             return _db.Query("UPDATE SimpleEcon SET Balance = @0 WHERE Name = @1",
-                player.balance, player.name) != 0;
+                player.balance, player.accountName) != 0;
         }
 
         public void SaveAllPlayers()

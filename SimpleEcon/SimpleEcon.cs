@@ -18,7 +18,7 @@ namespace SimpleEcon
     public class SimpleEcon : TerrariaPlugin
     {
         public override string Name => "Simple Economy";
-        public override Version Version => new Version(1, 0, 0);
+        public override Version Version => new Version(1, 0, 3);
         public override string Author => "Average";
         public override string Description => "A simple, light-weight economy TShock V5 plugin that can also be utilized by other plugins. No bullshit dependecies!";
         public static List<EconPlayer> econPlayers = new List<EconPlayer>();
@@ -61,7 +61,7 @@ namespace SimpleEcon
                     throw new Exception("Invalid storage type.");
             }
             dbManager = new Database(_db);
-            ServerApi.Hooks.NetGreetPlayer.Register(this, PlayerJoin);
+            TShockAPI.Hooks.PlayerHooks.PlayerPostLogin += PlayerJoin;
             ServerApi.Hooks.ServerLeave.Register(this, PlayerLeave);
             ServerApi.Hooks.GameInitialize.Register(this, Loaded);
             ServerApi.Hooks.NetSendData.Register(this, OnNpcStrike);
@@ -222,7 +222,7 @@ namespace SimpleEcon
         private void Balance(CommandArgs args)
         {
             EconPlayer player = PlayerManager.GetPlayer(args.Player.Name);
-            float balance = dbManager.getUserBalance(player.name);
+            float balance = dbManager.getUserBalance(player.accountName);
 
             args.Player.SendMessage($"You currently have {balance} {(balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}", Color.LightGoldenrodYellow);
             return;
@@ -314,15 +314,20 @@ namespace SimpleEcon
         }
 
 
-        private void PlayerJoin(GreetPlayerEventArgs args)
+        private void PlayerJoin(PlayerPostLoginEventArgs args)
         {
-            if(TShock.Players[args.Who] == null)
+            if(args.Player == null)
             {
                 return;
             }
-            TSPlayer player = TShock.Players[args.Who];
+            if(args.Player.IsLoggedIn == false)
+            {
+                return;
+            }
 
-            if (dbManager.userExists(TShock.Players[args.Who].Name) == false)
+            TSPlayer player = args.Player;
+
+            if (dbManager.userExists(player.Account.Name) == false)
             {
                 EconPlayer p = new EconPlayer(player.Name, player);
                 econPlayers.Add(p);
@@ -330,7 +335,7 @@ namespace SimpleEcon
                 return;
             }
 
-            var bal = dbManager.getUserBalance(player.Name);
+            var bal = dbManager.getUserBalance(player.Account.Name);
             EconPlayer o = new EconPlayer(player.Name, player, bal);
             econPlayers.Add(o);
 
@@ -367,7 +372,7 @@ namespace SimpleEcon
             if (disposing)
             {
                 dbManager.SaveAllPlayers();
-                ServerApi.Hooks.NetGreetPlayer.Deregister(this, PlayerJoin);
+                PlayerHooks.PlayerPostLogin -= PlayerJoin;
                 ServerApi.Hooks.ServerLeave.Deregister(this, PlayerLeave);
                 ServerApi.Hooks.GameInitialize.Deregister(this, Loaded);
                 ServerApi.Hooks.NetSendData.Deregister(this, OnNpcStrike);

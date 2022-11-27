@@ -11,6 +11,8 @@ namespace SimpleEcon
     {
         public string name { get; set; }
 
+        public string accountName {  get; set; }
+
         public TSPlayer player { get; set; }
 
         public float balance { get; set; }
@@ -19,7 +21,7 @@ namespace SimpleEcon
         {
             this.name = playerName;
             this.player = player;
-
+            this.accountName = player.Account.Name;
         }
 
         public EconPlayer(string playerName, TSPlayer player, float bal)
@@ -27,6 +29,7 @@ namespace SimpleEcon
             this.name = playerName;
             this.player = player;
             this.balance = bal;
+            this.accountName = player.Account.Name;
         }
 
     }
@@ -54,6 +57,12 @@ namespace SimpleEcon
         {
              return SimpleEcon.econPlayers.Find(p => p.name == name);
         }
+
+        public static EconPlayer GetPlayerFromAccount(string name)
+        {
+            return SimpleEcon.econPlayers.Find(p => p.accountName == name);
+        }
+
 
         public static void UpdatePlayerBalance(string name, float am)
         {
