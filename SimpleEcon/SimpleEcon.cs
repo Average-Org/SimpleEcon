@@ -275,8 +275,13 @@ namespace SimpleEcon
                 return;
             }
             float amount = float.Parse(args.Parameters[1]);
-            
-            if(amount <= PlayerManager.GetPlayer(args.Player.Name).balance)
+            if(amount < 1)
+            {
+                args.Player.SendErrorMessage("Please send a valid amount!");
+                return;
+            }
+
+            if (amount <= PlayerManager.GetPlayer(args.Player.Name).balance)
             {
                 PlayerManager.GetPlayer(args.Player.Name).balance -= amount;
                 PlayerManager.GetPlayer(player.Name).balance += amount;
