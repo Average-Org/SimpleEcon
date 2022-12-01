@@ -19,6 +19,8 @@ namespace SimpleEcon
 		public bool giveRewardsForPlaytime { get; set; } = false;
 		public int rewardtimer { get; set; } = 5;
 
+		public double DropOnDeath { get; set; } = 0;
+
 		public void Write()
 		{
 			string path = Path.Combine(TShock.SavePath, "SimpleEcon.json");
