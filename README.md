@@ -22,6 +22,7 @@ A super simple and lightweight tShock V5 plugin. This serves as a framework(ish)
   "announceMobDrops": true,
   "giveRewardsForPlaytime": false,
   "rewardtimer": 5
+  "DropOnDeath": 0.25
 }
 
 ```
@@ -35,6 +36,8 @@ All of this is extremely simple, and intuitive. `currencyNameSingular` and `curr
  
  `announceMobDrops` toggles whether or not it should send "+1 economy" to the player when they kill a mob or not!
  
+ `DropOnDeath`, this is a value range of 0-1 (0.05, 0.1, 0.5, etc) and this value will be taken as a percentage. This means each time a player dies they lose that percentage. 0.5 = 50%, 0.05 = 5%! If the value is 0, players will not lose money on death.
+ 
 ## Commands List 
 
 | Command        |Description           |Usage  |Permission    |
@@ -42,7 +45,10 @@ All of this is extremely simple, and intuitive. `currencyNameSingular` and `curr
 | /bal    |Shows the player's balance | /bal (Aliases: /eco, /balance) | se.user |
 | /baltop    |Shows the top balances of the server | /baltop (Aliases: /ecotop, /top) | se.user |
 | /transfer    |Takes money out of the user's account and sends it to another | /transfer `player` `quantity` (Alias: /pay) | se.user |
-| /givebal    |**ADMIN COMMAND**: allows a user to modify the user's balance (use negative value to take away) | /givebal `player` `quantity` (Alias: /gbal) | se.admin |
+| /givebal    |**ADMIN COMMAND**: allows a user to add to the user's balance | /givebal `player` `quantity` (Alias: /gbal) | se.admin |
+| /setbal    |**ADMIN COMMAND**: allows a user to set the user's balance to a value | /setbal `player` `quantity` (Alias: /sbal) | se.admin |
+| /resetbal    |**ADMIN COMMAND**: allows a user to reset the user's balance to zero | /resetbal `player` (Alias: /rbal) | se.admin |
+| /takebal    |**ADMIN COMMAND**: allows a user to take from the user's balance | /takebal `player` (Alias: /tbal) | se.admin |
 
 ## Plugin Dev Implementations
 Simply add this plugin as a dependency for yours and you'll be able to use the following:
@@ -96,3 +102,4 @@ player.SendSuccessMessage($"The moderator {moderator} has manipulated your curre
 
 ### Some dev notes:
 - Currencies are stored as a float, so decimal values are possible.
+- There are many other methods that have been implemented for your use! Feel free to ask me any questions about implementations :)
