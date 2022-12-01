@@ -77,7 +77,8 @@ namespace SimpleEcon
             Commands.ChatCommands.Add(new Command("se.user", PayUser, "pay", "transfer"));
             Commands.ChatCommands.Add(new Command("se.admin", GiveBal, "givebal", "gbal"));
             Commands.ChatCommands.Add(new Command("se.admin", TakeBal, "takebal", "tbal"));
-            Commands.ChatCommands.Add(new Command("se.admin", ResetBal, "takebal", "tbal"));
+            Commands.ChatCommands.Add(new Command("se.admin", ResetBal, "resetbal", "rbal"));
+            Commands.ChatCommands.Add(new Command("se.admin", SetBal, "setbal", "sbal"));
 
             rewardsManager();
         }
@@ -277,19 +278,40 @@ namespace SimpleEcon
             return;
 
         }
-
-        private void ResetBal(CommandArgs args)
+        private void SetBal(CommandArgs args)
         {
             if (args.Parameters.Count == 0)
             {
-                args.Player.SendErrorMessage("Please enter a player name! /resetbal <user> <amount>");
+                args.Player.SendErrorMessage("Please enter a player name! /sbal <user> <amount>");
                 return;
             }
             if (args.Parameters.Count == 1)
             {
-                args.Player.SendErrorMessage($"Please enter a quantity to send! /resetbal {args.Parameters[0]} <amount>");
+                args.Player.SendErrorMessage($"Please enter a quantity! /setbal {args.Parameters[0]} <amount>");
                 return;
             }
+
+            TSPlayer player = TSPlayer.FindByNameOrID(args.Parameters[0])[0];
+            if (player == null)
+            {
+                args.Player.SendErrorMessage("Invalid player!");
+                return;
+            }
+            float amount = float.Parse(args.Parameters[1]);
+            PlayerManager.GetPlayer(player.Name).balance = amount;
+            dbManager.SaveAllPlayers();
+            player.SendSuccessMessage($"The moderator {args.Player.Name} has set your balance! Your new balance is: {PlayerManager.GetPlayer(player.Name).balance} {(PlayerManager.GetPlayer(player.Name).balance == 1 ? config.currencyNameSingular : config.currencyNamePlural)}");
+            return;
+
+        }
+        private void ResetBal(CommandArgs args)
+        {
+            if (args.Parameters.Count == 0)
+            {
+                args.Player.SendErrorMessage("Please enter a player name! /resetbal <user>");
+                return;
+            }
+
 
             TSPlayer player = TSPlayer.FindByNameOrID(args.Parameters[0])[0];
             if (player == null)
